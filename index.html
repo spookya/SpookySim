@@ -1,14 +1,111 @@
+<!-- A-Frame documentation: https://aframe.io/docs/0.9.0/introduction/ -->
+<!-- A-Frame physics: https://github.com/donmccurdy/aframe-physics-system -->
+<!-- Weather rain https://github.com/takahirox/aframe-rain-->
+<!-- FPS Camera https://github.com/cemkod/aframe-fps-look-component -->
+<!-- Night sky component https://www.npmjs.com/package/aframe-star-system-component -->
+
 <html>
   <head>
-    <script src="https://aframe.io/releases/0.9.1/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/0.7.1/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-physics-system/v3.3.0/dist/aframe-physics-system.min.js"></script>
+    <script src="https://rawgit.com/takahirox/aframe-rain/master/build/aframe-rain.min.js"></script>
+    <script src="https://unpkg.com/aframe-fps-look-controls-component/dist/aframe-fps-look-controls-component.min.js"></script>
   </head>
   <body>
-    <a-scene>
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
-      <a-sky color="#ECECEC"></a-sky>
+    <div id="splash">
+      <div class="loading"></div>
+    </div>
+    <!-- Loading Element - IN PROGRESS-->
+    <!a-scene loading-screen="dotsColor: red; backgroundColor: black"><!/a-scene>
+    <a-scene physics="debug: true" fog="type: exponential; density: 0.05; color: #111;" >
+      
+      <!-- Player Elements -->
+      <a-entity id="mainAnimation">
+        <a-entity rain="width: 10; count: 500;" id="rainElementWindshield" width="0" position="0 0 -9"></a-entity>
+        <a-entity rain="width: 15; count: 1500;" id="rainElementLeftDoor" width="0" position="-8.9 0 -3"></a-entity>
+        <a-entity rain="width: 15; count: 1500;" id="rainElementRightDoor" width="0" position="8.9 0 -3"></a-entity>
+        <a-animation attribute="position" from="2.5 0.5 225" to="2.5 0.5 -225" repeat="infinite" dur="7500" easing="linear" ></a-animation> 
+        <a-sound src="#rain" autoplay="true" loop="true" position="-0.72 -2.2 -1"></a-sound>
+        <a-sound src="#engine" autoplay="true" loop="true" position="-0.72 -2.2 -1"></a-sound>
+        <a-camera position="-0.72 -2.2 -1" id="camera" camera fps-look-controls wasd-controls-enabled="true">
+          <a-entity geometry="primitive: circle; radius: 0.0001 height: 0.2; width: 0.2" position="0 0 -0.0051"
+            material="color: gray; opacity: 0.5">
+          </a-entity>
+        </a-camera>
+      </a-entity>
+      
+      <!-- Boundary Elements -->
+      <a-plane static-body position="0 0 0" rotation="-90 0 0" width="40" height="600" color="#201C11"></a-plane>
+                                         
+      <!-- Scenery Elements -->
+      <a-sky color="black"></a-sky>
+      <a-entity star-system></a-entity>
+      <a-entity id="treeContainer"></a-entity>
+      
+      <!-- Road Elements-->
+      <a-plane position="0.2 0.2 0.5" rotation="-90 0 0" width="0.10" height="600" color="#575E02"></a-plane>
+      <a-plane position="-0.2 0.2 -0.5" rotation="-90 0 0" width="0.10" height="600" color="#575E02"></a-plane>
+      <a-plane position="0 0.1 0" rotation="-90 0 0" width="10" height="600" color="black"></a-plane>
+      
+      <!-- Hill Elements -->
+      <a-plane position="-25 0.1 0" rotation="-45 90 0" width="600" height="40wadwa" color="#041D02"></a-plane>
+      <a-plane position="25 0.1 0" rotation="-45 -90 0" width="600" height="40" color="#041D02"></a-plane>
+      <a-plane position="-15 0.1 0" rotation="-67.6 90 0" width="600" height="40" color="#041D02"></a-plane>
+      <a-plane position="15 0.1 0" rotation="-67.5 -90 0" width="600" height="40" color="#041D02"></a-plane>
+      <a-plane position="17 0.1 0" rotation="-90 0 0" width="20" height="600" color="#041D02"></a-plane>
+      <a-plane position="-17 0.1 0" rotation="-90 0 0" width="20" height="600" color="#041D02"></a-plane>
+      
+
+      <!--Asset Elements -->
+      <a-asset>
+        <a-asset-item id="car-obj" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fnissan-gt-r-nismo.obj?1557427357297"></a-asset-item>
+        <a-asset-item id="car-mtl" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fnissan-gt-r-nismo.mtl?1557427354259"></a-asset-item>
+        <a-asset-item id="tree-obj" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Flowpolytree.obj?1557445447387"></a-asset-item>
+        <a-asset-item id="tree-mtl" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Flowpolytree.mtl?1557445447117"></a-asset-item>
+        <audio id="rain" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2FRain-on-the-roof-sound.mp3?1557501072207"></audio>
+        <audio id="engine" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2FDriving%20in%20Car%20Interior%20-%20Sound%20Effect.mp3?1557501865027"></audio>
+      </a-asset>
+      
+      <!--Model Elements-->
+      <a-entity obj-model="obj: #car-obj; mtl: #car-mtl" position="3 2 0" rotation="0 180 0" scale="2 2 2">
+        <a-animation attribute="position" from="2.5 0.5 225" to="2.5 0.5 -225" repeat="indefinite" dur="7500" easing="linear" ></a-animation> 
+      </a-entity>
+      
+      <!--Light Elements - IN PROGRESS -->
+      <!--right head light-->
+      <a-entity light="type: spot; angle: 35; color: #F9FFAE; intensity: 2; decay: 1; target: null" position="4.9 1 216">
+      <a-animation attribute="position" from="4.5 1.5 221.5" to="4.5 1.5 -228.5" repeat="indefinite" dur="7500" easing="linear" ></a-animation> 
+      </a-entity>
+            <!--left head light-->
+      <a-entity light="type: spot; angle: 35; color: #F9FFAE; intensity: 2; decay: 1; target: null" position=".5 1.5 218.5">
+      <a-animation attribute="position" from=".5 1.5 221.5" to=".5 1.5 -228.5" repeat="indefinite" dur="7500" easing="linear" ></a-animation> 
+      </a-entity>
+            <!--interior light-->
+      <a-entity id="interiorLight" light="type: point; angle: 45; color: #F9FFAE; intensity: 10; decay: 1; target: null" position="1.5 1 216">
+      <a-animation attribute="position" from="2.5 1.8 223.75" to="2.5 1.8 -226.25" repeat="indefinite" dur="7500" easing="linear" ></a-animation> 
+      </a-entity>
+      
+      <a-box position="2.5 1.75 224" rotation="0 0 0" color="yellow" scale="0.1 0.1 0.1"
+        event-set__click="_event: click; _target: #interiorLight; interiorLight.light.intensity: 0">
+        <a-animation attribute="position" from="2.5 1.8 223.5" to="2.5 1.8 -226.5" repeat="indefinite" dur="7500" easing="linear" >
+        </a-animation> 
+      </a-box>
+                                
+      <a-cylinder rotation="" position="2.5 1.35 223.5" radius="0.5" scale="0.1 0.1 0.1" color="yellow">
+      <a-animation attribute="position" from="2.5 1.35 223" to="2.5 1.35 -227" repeat="indefinite" dur="7500" easing="linear" ></a-animation>
+      </a-cylinder>
+      <!--Tree Elements -->
+      <!--Trees need a min distance of 2.5 -->
+      <!--Left Side of Road -->
+      
+      <!--Right Side of Road -->
+      <!--Test Trees for Height -->
+      <a-entity obj-model="obj: #tree-obj; mtl: #tree-mtl" position="-20 4 -5" rotation="0 0 -5"></a-entity>
+      <a-entity obj-model="obj: #tree-obj; mtl: #tree-mtl" position="-30 8 -5" rotation="0 0 -10"></a-entity>
+      <a-entity obj-model="obj: #tree-obj; mtl: #tree-mtl" position="-35 12 -5" rotation="0 0 -15"></a-entity>
     </a-scene>
+    <script src="main.js"></script>
+    
   </body>
 </html>
