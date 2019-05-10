@@ -1,0 +1,32 @@
+Things to get started with:
+
+
+Basic weather: Lighting/Thunder ,Rain (needs to follow car)
+Basic car functionality
+ -Lights -inside car-
+ -Horn?
+ -radio?
+Whats scary about this ride? What can we do to make it scary?
+ -someone in back seat that appears/dissappears, radio static, bloody hitch hikers on side of road, ghosts in middle of road, etc.
+
+Figure out what models to get - https://aframe.io/docs/0.9.0/introduction/models.html#sidebar
+
+Things that may be useful:
+Multiple html paths - easy playfield transition: https://aframe.io/docs/0.9.0/components/link.html
+Loading Screen - https://aframe.io/docs/0.9.0/components/loading-screen.html
+
+Light toggle buttons:
+Toggle headlights on/off from inside the car somehow
+Toggle inside car light on/off from inside the car somehow
+
+SCARY STUFF:
+Heights
+Spiders
+Clowns
+Snakes
+Suffocating
+Needles 
+Insects
+Children
+Drowning
+Claustrophobia
