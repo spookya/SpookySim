@@ -4,7 +4,6 @@ Things to get started with:
 Basic weather: Lighting/Thunder ,Rain (needs to follow car)
 Basic car functionality
  -Lights -inside car-
- -Horn?
  -radio?
 Whats scary about this ride? What can we do to make it scary?
  -someone in back seat that appears/dissappears, radio static, bloody hitch hikers on side of road, ghosts in middle of road, etc.
@@ -30,3 +29,8 @@ Insects
 Children
 Drowning
 Claustrophobia
+
+
+if/than statements for HTML!!!
+https://retentionscience.zendesk.com/hc/en-us/articles/115003025814-How-To-Build-HTML-for-Conditional-Statements
+try java script if it does work ^^^^
