@@ -1,5 +1,4 @@
 <!-- A-Frame documentation: https://aframe.io/docs/0.9.0/introduction/ -->
-<!-- A-Frame physics: https://github.com/donmccurdy/aframe-physics-system -->
 <!-- Weather rain https://github.com/takahirox/aframe-rain-->
 <!-- FPS Camera https://github.com/cemkod/aframe-fps-look-component -->
 <!-- Night sky component https://www.npmjs.com/package/aframe-star-system-component -->
@@ -8,35 +7,116 @@
   <head>
     <script src="https://aframe.io/releases/0.7.1/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
-    <script src="//cdn.rawgit.com/donmccurdy/aframe-physics-system/v3.3.0/dist/aframe-physics-system.min.js"></script>
     <script src="https://rawgit.com/takahirox/aframe-rain/master/build/aframe-rain.min.js"></script>
+    <script src="https://cdn.rawgit.com/matthewbryancurtis/aframe-star-system-component/db4f1030/index.js"></script> 
     <script src="https://unpkg.com/aframe-fps-look-controls-component/dist/aframe-fps-look-controls-component.min.js"></script>
   </head>
   <body>
-    <div id="splash">
-      <div class="loading"></div>
-    </div>
-    <!-- Loading Element - IN PROGRESS-->
-    <!a-scene loading-screen="dotsColor: red; backgroundColor: black"><!/a-scene>
-    <a-scene physics="debug: true" fog="type: exponential; density: 0.05; color: #111;" >
-      
-      <!-- Player Elements -->
-      <a-entity id="mainAnimation">
-        <a-entity rain="width: 10; count: 500;" id="rainElementWindshield" width="0" position="0 0 -9"></a-entity>
-        <a-entity rain="width: 15; count: 1500;" id="rainElementLeftDoor" width="0" position="-8.9 0 -3"></a-entity>
-        <a-entity rain="width: 15; count: 1500;" id="rainElementRightDoor" width="0" position="8.9 0 -3"></a-entity>
-        <a-animation attribute="position" from="2.5 0.5 225" to="2.5 0.5 -225" repeat="infinite" dur="7500" easing="linear" ></a-animation> 
-        <a-sound src="#rain" autoplay="true" loop="true" position="-0.72 -2.2 -1"></a-sound>
-        <a-sound src="#engine" autoplay="true" loop="true" position="-0.72 -2.2 -1"></a-sound>
-        <a-camera position="-0.72 -2.2 -1" id="camera" camera fps-look-controls wasd-controls-enabled="true">
-          <a-entity geometry="primitive: circle; radius: 0.0001 height: 0.2; width: 0.2" position="0 0 -0.0051"
-            material="color: gray; opacity: 0.5">
+    <!--Asset Elements -->
+    <a-asset>
+        <a-asset-item id="car-obj" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fnissan-gt-r-nismo.obj?1557427357297"></a-asset-item>
+        <a-asset-item id="car-mtl" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fnissan-gt-r-nismo.mtl?1557427354259"></a-asset-item>
+        <a-asset-item id="tree-obj" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Flowpolytree.obj?1557445447387"></a-asset-item>
+        <a-asset-item id="tree-mtl" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Flowpolytree.mtl?1557445447117"></a-asset-item>
+        <a-asset-item id="clown-obj" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fclown.obj?1557755467476"></a-asset-item>
+        <a-asset-item id="clown-mtl" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fclown.mtl?1557755466740"></a-asset-item>
+        <a-asset-item id="ghost-obj" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fkodama.obj?1557759382875"></a-asset-item>
+        <a-asset-item id="ghost-mtl" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fkodama.mtl?1557759382553"></a-asset-item>
+        <audio id="rain" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2FRain-on-the-roof-sound.mp3?1557501072207"></audio>
+        <audio id="engine" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2FDriving%20in%20Car%20Interior%20-%20Sound%20Effect.mp3?1557501865027"></audio>
+        <audio id="clown-laugh" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fclown-Laugh.wav?1557759468977"></audio>
+      </a-asset>
+    
+    <a-scene fog="type: exponential; color: #454c49; density: 0.05">
+      <a-entity id="animationLoop">
+        
+        <a-animation id="mainAnimation" begin="startAnimation" attribute="position" from="0 0 225" to="0 0 -225" repeat="1" dur="7500" easing="linear" ></a-animation>
+
+        <!--Player Elements -->
+        <a-entity id="player">
+          <a-entity rain="width: 10; count: 1000;" id="rainElementWindshield" width="0" position="0 0 -8.4"></a-entity>
+          <a-entity rain="width: 15; count: 1000;" id="rainElementLeftDoor" width="0" position="-7 0 -3"></a-entity>
+          <a-entity rain="width: 15; count: 1000;" id="rainElementRightDoor" width="0" position="12 0 -3"></a-entity>
+          <a-camera position="1.8 -1.7 -0.9" id="camera" camera fps-look-controls wasd-controls-enabled="true" cursor="fuse: false">
+            <a-entity id="cursor" geometry="primitive: ring; radiusOuter: 0.0007; radiusInner: 0.0005" position="0 0 -0.05"
+              material="color: cyan; shader: flat" cursor="fuseTimeout: 1500; fuse: true">
+              <a-animation begin="click" easing="ease-in" attribute="scale" fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
+              <a-animation begin="fusing" easing="ease-in" attribute="scale" fill="forwards" from="1 1 1" to="0.1 0.1 0.1" dur="1500"></a-animation>
+            </a-entity>
+          </a-camera>
+        </a-entity>
+
+        <!--Car Elements-->
+        <a-entity id="car">
+          
+          <!--Car Body-->
+          <a-entity id="carBody" obj-model="obj: #car-obj; mtl: #car-mtl" position="2.5 0.5 0" rotation="0 180 0" scale="2 2 2">
+            <a-sound src="#rain" autoplay="true" loop="true" position="-0.72 -2.2 -2"></a-sound>
+            <a-sound src="#engine" autoplay="true" loop="true" position="-0.72 -2.2 -2"></a-sound>
           </a-entity>
-        </a-camera>
+          
+          <!--Right headlight-->
+          <a-entity id="headlightR" position="4.2 1.3 -3.8" light="type: spot; angle: 35; color: #F9FFAE; intensity: 2.5; decay: 1; target: null;" ></a-entity>
+          
+          <!--left headlight-->
+          <a-entity id="headlightL" position="1 1.3 -3.8" light="type: spot; angle: 35; color: #F9FFAE; intensity: 2.5; decay: 1; target: null"></a-entity>
+          
+          <!--Interior light-->
+          <a-entity id="interiorLight" position="2.5 1.75 -1.2" light="type: point; angle: 45; color: #F9FFAE; intensity: 1; decay: 1; target: null" ></a-entity>
+          
+          <!--Interior light off button-->
+          <a-box id="lightInt1" position="2.5 1.85 -1.2" rotation="0 0 0" color="#F9FFAE" scale="0.1 0.1 0.1"
+           event-set__event1="_event: click; _target: #interiorLight; light.intensity: 0.1"
+           event-set__event2="_event: click; scale: 0.01 0.01 0.01"
+           event-set__event3="_event: click; _target: #lightInt2; scale: 0.1 0.1 0.1" >
+          </a-box>
+          
+          <!--Interior light on button-->
+          <a-box id="lightInt2" position="2.5 1.85 -1.2" rotation="0 0 0" color="blue" scale="0.01 0.01 0.01"
+           event-set__event1="_event: click; _target: #interiorLight; light.intensity: 1"
+           event-set__event2="_event: click; scale: 0.01 0.01 0.01"
+           event-set__event3="_event: click; _target: #lightInt1; scale: 0.1 0.1 0.1">
+          </a-box>
+          
+          <!--Headlights on button-->                   
+          <a-cylinder id="headlightButton1" rotation="-90 0 0" position="2.5 1.35 223.5" radius="0.5" scale="0.1 0.15 0.1" color="yellow"
+           event-set__event1="_event: click; _target: #headlightR; light.intensity: 0"
+           event-set__event2="_event: click; _target: #headlightL; light.intensity: 0"
+           event-set__event3="_event: click; scale: 0.01 0.01 0.01"
+           event-set__event4="_event: click; _target: #headlightButton2; scale: 0.1 0.15 0.1" >
+          </a-cylinder>
+          
+          <!--Headlights off button-->
+          <a-cylinder id="headlightButton2" rotation="-90 0 0" position="2.5 1.15 223" radius="0.5" scale="0.01 0.01 0.01" color="blue"
+           event-set__event1="_event: click; _target: #headlightR; light.intensity: 2.5"
+           event-set__event2="_event: click; _target: #headlightL; light.intensity: 2.5"
+           event-set__event3="_event: click; scale: 0.01 0.01 0.01"
+           event-set__event4="_event: click; _target: #headlightButton1; scale: 0.1 0.15 0.1" >
+          </a-cylinder>
+          
+        </a-entity>
+
+        <!--The clown-->
+        <a-entity id="clown" position="2.9 0.09 -1" visible="false" rotation="0 -90 0" obj-model="obj: #clown-obj; mtl: #clown-mtl" scale="0.5 0.5 0.5">
+          <a-animation attribute="visible" from="true" to="false" begin="mouseenter" dur="2000"></a-animation>
+        </a-entity>
+ 
+        <!--The plane that spawns the clown-->
+        <a-plane id="clownSpawnPlane" position="0.5 1.15 -1" opacity="0"  height="3.5" width="3.5" rotation="0 90 0"
+         event-set__event1="_event: mouseenter; _target: #clown; visible: true; dur: 1000;"
+         sound="src: #clown-laugh; on: mouseenter; volume: 3;"
+         event-set__event2="_event: mouseenter; height: 0; width: 0; dur: 1000;">
+        </a-plane>
+        
+        <!--Billy the ghost-->
+        <a-entity id="billyTheGhost" obj-model="obj: #ghost-obj; mtl: #ghost-mtl" position="2.5 0.5 0" rotation="0 0 0" scale="0.05 0.05 0.05">
+          <a-animation begin="start" attribute="position" from="2.5 20 -225" to="2.5 -1.8 25" repeat="1" dur="7500" easing="linear" ></a-animation>
+        </a-entity>
+        
       </a-entity>
       
       <!-- Boundary Elements -->
-      <a-plane static-body position="0 0 0" rotation="-90 0 0" width="40" height="600" color="#201C11"></a-plane>
+      <a-plane position="0 0 0" rotation="-90 0 0" width="40" height="600" color="#201C11"></a-plane>
                                          
       <!-- Scenery Elements -->
       <a-sky color="black"></a-sky>
@@ -49,63 +129,14 @@
       <a-plane position="0 0.1 0" rotation="-90 0 0" width="10" height="600" color="black"></a-plane>
       
       <!-- Hill Elements -->
-      <a-plane position="-25 0.1 0" rotation="-45 90 0" width="600" height="40wadwa" color="#041D02"></a-plane>
+      <a-plane position="-25 0.1 0" rotation="-45 90 0" width="600" height="40" color="#041D02"></a-plane>
       <a-plane position="25 0.1 0" rotation="-45 -90 0" width="600" height="40" color="#041D02"></a-plane>
-      <a-plane position="-15 0.1 0" rotation="-67.6 90 0" width="600" height="40" color="#041D02"></a-plane>
+      <a-plane position="-15 0.1 0" rotation="-67.5 90 0" width="600" height="40" color="#041D02"></a-plane>
       <a-plane position="15 0.1 0" rotation="-67.5 -90 0" width="600" height="40" color="#041D02"></a-plane>
       <a-plane position="17 0.1 0" rotation="-90 0 0" width="20" height="600" color="#041D02"></a-plane>
       <a-plane position="-17 0.1 0" rotation="-90 0 0" width="20" height="600" color="#041D02"></a-plane>
       
-
-      <!--Asset Elements -->
-      <a-asset>
-        <a-asset-item id="car-obj" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fnissan-gt-r-nismo.obj?1557427357297"></a-asset-item>
-        <a-asset-item id="car-mtl" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Fnissan-gt-r-nismo.mtl?1557427354259"></a-asset-item>
-        <a-asset-item id="tree-obj" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Flowpolytree.obj?1557445447387"></a-asset-item>
-        <a-asset-item id="tree-mtl" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2Flowpolytree.mtl?1557445447117"></a-asset-item>
-        <audio id="rain" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2FRain-on-the-roof-sound.mp3?1557501072207"></audio>
-        <audio id="engine" src="https://cdn.glitch.com/beebc122-6d50-4803-81ce-d194f0281b79%2FDriving%20in%20Car%20Interior%20-%20Sound%20Effect.mp3?1557501865027"></audio>
-      </a-asset>
-      
-      <!--Model Elements-->
-      <a-entity obj-model="obj: #car-obj; mtl: #car-mtl" position="3 2 0" rotation="0 180 0" scale="2 2 2">
-        <a-animation attribute="position" from="2.5 0.5 225" to="2.5 0.5 -225" repeat="indefinite" dur="7500" easing="linear" ></a-animation> 
-      </a-entity>
-      
-      <!--Light Elements - IN PROGRESS -->
-      <!--right head light-->
-      <a-entity light="type: spot; angle: 35; color: #F9FFAE; intensity: 2; decay: 1; target: null" position="4.9 1 216">
-      <a-animation attribute="position" from="4.5 1.5 221.5" to="4.5 1.5 -228.5" repeat="indefinite" dur="7500" easing="linear" ></a-animation> 
-      </a-entity>
-            <!--left head light-->
-      <a-entity light="type: spot; angle: 35; color: #F9FFAE; intensity: 2; decay: 1; target: null" position=".5 1.5 218.5">
-      <a-animation attribute="position" from=".5 1.5 221.5" to=".5 1.5 -228.5" repeat="indefinite" dur="7500" easing="linear" ></a-animation> 
-      </a-entity>
-            <!--interior light-->
-      <a-entity id="interiorLight" light="type: point; angle: 45; color: #F9FFAE; intensity: 10; decay: 1; target: null" position="1.5 1 216">
-      <a-animation attribute="position" from="2.5 1.8 223.75" to="2.5 1.8 -226.25" repeat="indefinite" dur="7500" easing="linear" ></a-animation> 
-      </a-entity>
-      
-      <a-box position="2.5 1.75 224" rotation="0 0 0" color="yellow" scale="0.1 0.1 0.1"
-        event-set__click="_event: click; _target: #interiorLight; interiorLight.light.intensity: 0">
-        <a-animation attribute="position" from="2.5 1.8 223.5" to="2.5 1.8 -226.5" repeat="indefinite" dur="7500" easing="linear" >
-        </a-animation> 
-      </a-box>
-                                
-      <a-cylinder rotation="" position="2.5 1.35 223.5" radius="0.5" scale="0.1 0.1 0.1" color="yellow">
-      <a-animation attribute="position" from="2.5 1.35 223" to="2.5 1.35 -227" repeat="indefinite" dur="7500" easing="linear" ></a-animation>
-      </a-cylinder>
-      <!--Tree Elements -->
-      <!--Trees need a min distance of 2.5 -->
-      <!--Left Side of Road -->
-      
-      <!--Right Side of Road -->
-      <!--Test Trees for Height -->
-      <a-entity obj-model="obj: #tree-obj; mtl: #tree-mtl" position="-20 4 -5" rotation="0 0 -5"></a-entity>
-      <a-entity obj-model="obj: #tree-obj; mtl: #tree-mtl" position="-30 8 -5" rotation="0 0 -10"></a-entity>
-      <a-entity obj-model="obj: #tree-obj; mtl: #tree-mtl" position="-35 12 -5" rotation="0 0 -15"></a-entity>
     </a-scene>
     <script src="main.js"></script>
-    
   </body>
 </html>
